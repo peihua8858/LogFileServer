@@ -5,6 +5,8 @@ import com.jcraft.jzlib.GZIPException
 import com.jcraft.jzlib.Inflater
 import com.jcraft.jzlib.JZlib
 import java.io.*
+import java.util.Locale
+import java.util.Locale.getDefault
 import java.util.zip.CRC32
 
 class IPngConverter(source: File?, target: File?) {
@@ -43,7 +45,7 @@ class IPngConverter(source: File?, target: File?) {
     }
 
     private fun isPngFileName(file: File): Boolean {
-        return file.name.toLowerCase().endsWith(".png")
+        return file.name.lowercase(getDefault()).endsWith(".png")
     }
 
     private fun getTrunk(szName: String): PNGTrunk? {

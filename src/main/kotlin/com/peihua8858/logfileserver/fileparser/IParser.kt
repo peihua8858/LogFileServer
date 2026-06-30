@@ -7,6 +7,7 @@ import com.peihua8858.logfileserver.fileparser.impl.ApkParser
 import com.peihua8858.logfileserver.fileparser.impl.ImagesParser
 import com.peihua8858.logfileserver.fileparser.impl.IpaParser
 import com.peihua8858.logfileserver.fileparser.impl.OtherParser
+import com.peihua8858.logfileserver.utils.sourceFile
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -18,11 +19,11 @@ import java.io.IOException
  * @version 1.0
  * @date 2020/1/16 15:21
  */
-abstract class IParser {
+abstract class IParser<T> {
     @get:Throws(FileNotFoundException::class)
     protected val classPathFile: File
-        protected get() {
-            val path = File("").absolutePath;
+        get() {
+            val path = sourceFile?.absolutePath
             println("classpath:$path")
             var file = File(path)
             println("path:" + file.absolutePath)
@@ -101,7 +102,7 @@ abstract class IParser {
      * @version 1.0
      */
     @Throws(PluginException::class, IOException::class)
-    abstract fun onParser(parameter: Parameter): Pair<AppInfo, ByteArray?>
+    abstract fun onParser(parameter: Parameter): Pair<T, ByteArray?>
 
     abstract fun generateParentFile(
         bundleId: String?, isOnlyUploadFile: Boolean,
@@ -120,7 +121,7 @@ abstract class IParser {
          */
         @JvmStatic
         @Throws(IllegalAccessException::class)
-        fun createParser(extensionName: String?, contentType: String): IParser {
+        fun<T> createParser(extensionName: String?, contentType: String): IParser<T> {
             return when {
                 "apk".equals(extensionName, ignoreCase = true) -> {
                     ApkParser()

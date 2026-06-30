@@ -18,7 +18,7 @@ import java.io.*
 import javax.imageio.ImageIO
 
 
-internal class IpaParser : AbstractParser() {
+internal class IpaParser : AbstractParser<AppInfo>() {
     private fun inputStream2String(inputStream: InputStream): String {
         val reader = BufferedReader(InputStreamReader(inputStream))
         val buffer = StringBuffer()

@@ -17,7 +17,7 @@ import java.io.File
  * @version 1.0
  * @date 2020/1/16 15:20
  */
-internal class ApkParser : AbstractParser() {
+internal class ApkParser : AbstractParser<AppInfo>() {
     @Throws(PackageParseException::class)
     override fun onParser(parameter: Parameter): Pair<AppInfo, ByteArray?> {
         val androidParentPath = PARENT_FILE + File.separator

@@ -1,22 +1,19 @@
 package com.peihua8858.logfileserver.fileparser.impl
 
-import com.example.ServiceApplication
-import com.example.entity.primary.AppInfoExample
-import com.peihua8858.logfileserver.fileparser.IParser
+import com.peihua8858.logfileserver.entity.appinfo.AppInfo
 import com.peihua8858.logfileserver.fileparser.Parameter
-import com.example.utils.Utils
 import java.io.File
 import javax.imageio.ImageIO
 
 class ImagesParser : AbstractParser() {
-    override fun onParser(parameter: Parameter): AppInfoExample {
+    override fun onParser(parameter: Parameter): Pair<AppInfo, ByteArray?> {
         val appPath = parameter.file
-        val app = AppInfoExample()
+        val app = AppInfo()
         app.platform = "images"
         app.fileName = appPath.name
         app.filePath = appPath.absolutePath
         uploadFile(appPath, app, parameter.isOverwriteFile, "")
-        return app
+        return app to null
     }
 
     override fun createPlatformFile(

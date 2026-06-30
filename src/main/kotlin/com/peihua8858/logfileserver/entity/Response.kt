@@ -60,7 +60,7 @@ data class Response<T>(
             return Response(code = code, msg = msg)
         }
 
-        fun failed(msg: String): Response<Any?> {
+        fun<T> failed(msg: String): Response<T> {
             return restResult(code = HttpStatus.BAD_REQUEST.value(), msg = msg)
         }
 

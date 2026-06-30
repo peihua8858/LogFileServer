@@ -2,22 +2,23 @@ package com.peihua8858.logfileserver.fileparser.impl
 
 import com.example.ServiceApplication
 import com.example.ServiceApplication.Companion.readUploadFolder
-import com.example.entity.primary.AppInfoExample
+import com.example.utils.Utils
+import com.peihua8858.logfileserver.entity.FileModel
+import com.peihua8858.logfileserver.entity.appinfo.AppInfo
 import com.peihua8858.logfileserver.fileparser.IParser
 import com.peihua8858.logfileserver.fileparser.Parameter
-import com.example.utils.Utils
 import java.io.File
 import javax.imageio.ImageIO
 
-class OtherParser : IParser() {
-    override fun onParser(parameter: Parameter): AppInfoExample {
+class OtherParser : IParser<FileModel>() {
+    override fun onParser(parameter: Parameter): Pair<FileModel, ByteArray?> {
         val appPath = parameter.file
-        val app = AppInfoExample()
+        val app = FileModel()
         app.platform = "other"
         app.fileName = appPath.name
         app.filePath = appPath.absolutePath
         uploadFile(appPath, app, parameter.isOverwriteFile, "")
-        return app
+        return app to null
     }
 
     override fun generateParentFile(

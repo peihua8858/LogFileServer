@@ -20,6 +20,7 @@ repositories {
     mavenCentral()
     maven {url "https://repo.spring.io/milestone" }
     maven { url 'https://jitpack.io' }
+    maven { url 'repo1.maven.org/maven2' }
 }
 
 dependencies {
@@ -31,9 +32,8 @@ dependencies {
     // Actuator：健康检查、监控
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     // OpenAPI / Swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.3'
     implementation 'org.xerial:sqlite-jdbc'
-    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter'
     implementation('com.baomidou:mybatis-plus-spring-boot4-starter:3.5.13')
     implementation('com.baomidou:mybatis-plus:3.5.3.1')
     implementation 'org.jetbrains.kotlin:kotlin-reflect'

@@ -3,10 +3,10 @@ package com.peihua8858.logfileserver.utils
 import com.peihua8858.logfileserver.entity.appinfo.AppInfo
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.boot.system.ApplicationHome
+import org.springframework.util.StringUtils
 import java.io.File
-import java.util.regex.Matcher
 import java.util.regex.Pattern
-import kotlin.math.min
+import kotlin.contracts.ExperimentalContracts
 
 private val IP_ADDRESS_AND_PORT = ("((25[0-5]|2[0-4][0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9])\\." +
         "(25[0-5]|2[0-4]" + "[0-9]|[0-1][0-9]{2}|[1-9][0-9]|[1-9]|0)\\.(25[0-5]|2[0-4][0-9]|[0-1]" + "[0-9]{2}|[1"
@@ -57,3 +57,34 @@ val HttpServletRequest.serverUrl: String
         }
         return serverUrl
     }
+
+
+fun  isEmptyException(vararg data: CharSequence?): Boolean {
+    val sb = StringBuilder()
+    for (charSequence in data) {
+        if (charSequence.isNullOrEmpty()) {
+            sb.append(charSequence).append("and")
+        }
+    }
+    println(">>>>>:$sb")
+    if (sb.isNotEmpty()) {
+        sb.subSequence(0, sb.lastIndexOf("and"))
+        throw NullPointerException("Required String parameter $sb is invalid")
+    }
+    return false
+}
+
+fun  isEmptyMessage(vararg data: CharSequence?): String {
+    val sb = StringBuilder()
+    for (charSequence in data) {
+        if (charSequence.isNullOrEmpty()) {
+            sb.append(charSequence).append("and")
+        }
+    }
+    println(">>>>>:$sb")
+    if (sb.isNotEmpty()) {
+        sb.subSequence(0, sb.lastIndexOf("and"))
+        return "Required String parameter $sb is invalid"
+    }
+    return ""
+}
