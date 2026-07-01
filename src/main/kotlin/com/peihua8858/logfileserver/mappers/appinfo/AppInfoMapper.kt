@@ -52,10 +52,21 @@ interface AppInfoMapper : BaseMapper<AppInfo> {
         SELECT a.*
         FROM app_info a
         JOIN (
-        SELECT bundle_id,max(update_time)AS max_update_time from app_info a where version_name
-             IN (SELECT bundle_id,max(version_name) from app_info  WHERE platform = #{platform} group by bundle_id) GROUP BY bundle_id
+            SELECT t1.bundle_id, t1.max_version_code, MAX(a2.update_time) AS max_update_time
+            FROM app_info a2
+            JOIN (
+                SELECT bundle_id, MAX(CAST(version_code AS INTEGER)) AS max_version_code
+                FROM app_info
+                WHERE platform = #{platform}
+                GROUP BY bundle_id
+            ) t1
+              ON a2.bundle_id = t1.bundle_id
+             AND CAST(a2.version_code AS INTEGER) = t1.max_version_code
+            WHERE a2.platform = #{platform}
+            GROUP BY t1.bundle_id, t1.max_version_code
         ) t
           ON a.bundle_id = t.bundle_id
+         AND CAST(a.version_code AS INTEGER) = t.max_version_code
          AND a.update_time = t.max_update_time
         WHERE a.platform = #{platform}
         ORDER BY a.update_time DESC

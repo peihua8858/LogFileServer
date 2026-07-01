@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:svg="http://www.w3.org/2000/svg">
+<head>
+    <meta charset="UTF-8">
+    <link rel="icon" th:href="@{/static/common/images/favicon.ico}" type="image/x-icon">
+    <title>App文件上传</title>
+    <link rel="stylesheet" th:href="@{/static/common/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/static/upload/css/bootstrap.fd.css}"/>
+    <!-- 引用控制层插件样式 -->
+    <script th:src="@{/static/common/js/jquery/jquery.min.js}"></script>
+    <script th:src="@{/static/common/js/bootstrap/bootstrap.min.js}"></script>
+    <script th:src="@{/static/upload/js/app-info-parser.min.js}"></script>
+    <!-- 引用初始化JS -->
+    <script th:src="@{/static/upload/js/bootstrap.fd2.js}"></script>
+<!--    <style>-->
+<!--        /*html, body {*/-->
+<!--        /*    height: 100%;*/-->
+<!--        /*    margin: 0;*/-->
+<!--        /*    padding: 0;*/-->
+<!--        /*}*/-->
+
+<!--        .bfd-dropfield {-->
+<!--            display: inline;-->
+<!--            padding: 5px;-->
+<!--        }-->
+
+<!--        .bfd-dropfield-inner {-->
+<!--            border: 5px dashed #888;-->
+<!--            color: #888;-->
+<!--            cursor: pointer;-->
+<!--            font-size: 32px;-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        .bfd-dropfield-inner:hover, .bfd-dropfield-inner.bfd-dragover {-->
+<!--            border-color: #bbb;-->
+<!--            color: #bbb;-->
+<!--        }-->
+
+<!--        .bfd-info {-->
+<!--            overflow: hidden;-->
+<!--            white-space: nowrap;-->
+<!--        }-->
+
+<!--        .bfd-error-message {-->
+<!--            text-align: center;-->
+<!--        }-->
+
+<!--        .bfd-remove {-->
+<!--            cursor: pointer;-->
+<!--        }-->
+<!--    </style>-->
+    <script>
+        function showDialog(){
+            $.FileDialog({multiple: true}).on('files.bs.filedialog', function(ev) {
+                var files = ev.files;
+                var text = "";
+                files.forEach(function(f) {
+                    text += f.name + "<br/>";
+                });
+                $("#output").html(text);
+            }).on('cancel.bs.filedialog', function(ev) {
+                $("#output").html("Cancelled!");
+            });
+        }
+    </script>
+</head>
+<body onload="showDialog()">
+<!--<div class="container">-->
+<!--    <div class='modal fade'>-->
+<!--        <div class='modal-dialog'>-->
+<!--            <div class='modal-content'>-->
+<!--                <div class='card-header'>-->
+<!--                    <button type='button' class='close' data-dismiss='modal'>-->
+<!--                        <span aria-hidden='true'>&times;</span>-->
+<!--                        <span class='sr-only'>-->
+<!--                                </span>-->
+<!--                    </button>-->
+<!--                    <h4 class='modal-title'>-->
+<!--                        sfffffffff-->
+<!--                    </h4>-->
+<!--                </div>-->
+<!--                <div class='modal-body'>-->
+<!--                    <input type='file'/>-->
+<!--                    <div class='bfd-dropfield'>-->
+<!--                        <div class='bfd-dropfield-inner'>-->
+<!--                            sfffffffff-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class='container-fluid bfd-files'>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class='modal-footer'>-->
+<!--                    <button type='button' class='btn btn-primary bfd-ok'>-->
+<!--                        OK-->
+<!--                    </button>-->
+<!--                    <button type='button' class='btn btn-default bfd-cancel'-->
+<!--                            data-dismiss='modal'>-->
+<!--                        Cancel-->
+<!--                    </button>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+</body>
+</html>

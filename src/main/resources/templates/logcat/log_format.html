@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="icon" th:href="@{/static/common/images/favicon.ico}" type="image/x-icon">
+    <title>移动组日志系统</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!--    jQuery相关-->
+    <!--    https://cdn.bootcss.com/jquery/3.4.1/jquery.js-->
+<!--    <script th:src="@{/static/js/jquery/jquery.js}" type="text/javascript"></script>-->
+    <!--    https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js-->
+    <script th:src="@{/static/common/js/jquery/jquery.min.js}" type="text/javascript"></script>
+
+    <link rel="stylesheet" th:href="@{/static/common/css/bootstrap.min.css}"/>
+    <!--    <link rel="stylesheet" href="https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css"/>-->
+    <script th:src="@{/static/common/js/jquery.jsonview.js}" type="text/javascript"></script>
+    <link th:href="@{/static/common/css/jquery.jsonview.css}" rel="stylesheet" type="text/css"/>
+    <link th:href="@{/static/common/css/jsonView.css}" rel="stylesheet" type="text/css"/>
+</head>
+<body style="width: 100%">
+<button type="button" style="margin-top: 10px;margin-left: 20px"
+        th:onclick="lock([[${log.id.toString()}]],[[${log.locking}]])"
+        th:class="${log.locking == 1} ? 'btn btn-warning btn-secondary btn-sm':'btn btn-success btn-sm'"
+        th:text="${log.locking == 1 ?'已锁定':'未锁定'}" data-toggle="tooltip" data-placement="top"
+        title="锁定状态，不会更新接口数据内容"></button>
+<a id="oneClickSimulation" style="margin-top: 10px;margin-left: 20px" class="btn btn-success btn-sm" target="_blank" th:href="'/log/model/'+${id}">
+    一键模拟
+</a>
+<button id="formatJson" style="margin-top: 10px;margin-left: 20px" type="button" class="btn btn-success btn-sm">取消格式化
+</button>
+<br/>
+<div id="log-container"
+     style="height: 93.5%; margin-top: 10px; overflow-y: scroll; background: #333; color: #aaa; padding: 10px;">
+    <div id="content">
+        <span class="color:red">请求地址:</span> <br/> <span th:text="${log.url}"></span>
+        <hr/>
+        <span class="color:red">请求头:</span> <br/>
+        <div id="requestHeader"></div>
+        <span class="color:red">请求参数:</span> <br/>
+        <div id="request"></div>
+        <hr/>
+        <span class="color:red">响应头:</span> <br/>
+        <div id="responseHeader"></div>
+        <span class="color:red"> 返回结果:</span><br/>
+        <div id="response"></div>
+    </div>
+
+
+</div>
+<script th:inline="javascript">
+    let isFormat = true;
+    const response = [[${log.response}]];
+    const request = [[${log.request}]];
+    const requestHeader = [[${log.requestHeader}]];
+    const responseHeader = [[${log.responseHeader}]];
+    jQuery.escapeHtml = function (s) {
+        return (s) ? jQuery("<p>").text(s).html() : "";
+    }
+
+    function formatJson(isFormat) {
+        $("#requestHeader").empty();
+        $("#responseHeader").empty();
+        $("#response").empty();
+        $("#request").empty();
+        $("#requestHeader").append(requestHeader);
+        $("#responseHeader").append(responseHeader);
+        if (isFormat) {
+            $("#formatJson").text("取消格式化");
+            try {
+                $('#response').JSONView($.escapeHtml(response));
+            } catch (err) {
+                $('#response').append($.escapeHtml(response));
+            }
+            try {
+                $('#request').JSONView($.escapeHtml(request))
+            } catch (err) {
+                $('#request').append($.escapeHtml(request))
+            }
+        } else {
+            $("#formatJson").text("格式化");
+            $('#response').append($.escapeHtml(response));
+            $('#request').append(request)
+        }
+    }
+
+    $(function () {
+        formatJson(isFormat);
+        $("#formatJson").click(function () {
+            isFormat = !isFormat;
+            formatJson(isFormat);
+        });
+    });
+
+    function lock(id, lock) {
+        lock = lock == 1 ? 0 : 1;
+        $.ajax({
+            type: "POST",
+            url: "/log/lock",
+            contentType: "application/json; charset=utf-8",
+            data: JSON.stringify({id: id, locking: lock}),
+            dataType: "json",
+            success: function (message) {
+                window.location.reload()
+            },
+            error: function (message) {
+            }
+        });
+    }
+</script>
+</body>
+</html>

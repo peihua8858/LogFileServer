@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableId
 import com.baomidou.mybatisplus.annotation.TableName
 import com.baomidou.mybatisplus.extension.activerecord.Model
 import com.fasterxml.jackson.annotation.JsonFormat
+import com.peihua8858.logfileserver.entity.FileModel
 import com.peihua8858.logfileserver.utils.isAndroidPlatform
 import com.peihua8858.logfileserver.utils.isIOSPlatform
 import tools.jackson.databind.annotation.JsonSerialize
@@ -25,43 +26,43 @@ data class AppInfo(
      * 名称
      */
     @TableField("name")
-    var name: String? = null,
+    override var name: String? = null,
 
     /**
      * 版本号
      */
     @TableField("version_code")
-    var versionCode: Int? = null,
+    override var versionCode: Int? = null,
 
     /**
      * 版本名称
      */
     @TableField("version_name")
-    var versionName: String? = null,
+    override var versionName: String? = null,
 
     /**
      * 文件大小
      */
     @TableField("file_size")
-    var fileSize: Long? = null,
+    override var fileSize: Long? = null,
 
     /**
      * 文件路径
      */
     @TableField("file_path")
-    var filePath: String? = null,
+    override var filePath: String? = null,
 
     /**
      * 文件名称
      */
     @TableField("file_name")
-    var fileName: String? = null,
+    override var fileName: String? = null,
 
     /**
      * 项目图标
      */
     @TableField("icon_path")
-    var iconPath: String? = null,
+    override var iconPath: String? = null,
 
     /**
      * 下载次数
@@ -107,13 +108,13 @@ data class AppInfo(
      * 平台名称，Android或iOS
      */
     @TableField("platform")
-    var platform: String? = null,
+    override var platform: String? = null,
 
     /**
      * 下载地址
      */
     @TableField("download_url")
-    var downloadUrl: String? = null,
+    override var downloadUrl: String? = null,
 
     /**
      * 持续时间
@@ -125,7 +126,7 @@ data class AppInfo(
      * app包名
      */
     @TableField("bundle_id")
-    var bundleId: String? = null,
+    override var bundleId: String? = null,
 
     /**
      * 项目名称
@@ -143,7 +144,7 @@ data class AppInfo(
      * 编译类型，如：release、debug、develop等
      */
     @TableField("build_type")
-    var buildType: String? = null,
+    override var buildType: String? = null,
 
     /**
      * IOS plist 文件地址
@@ -161,8 +162,8 @@ data class AppInfo(
      * APP编译描述信息
      */
     @TableField("build_description")
-    var buildDescription: String? = null,
-) : Model<AppInfo>() {
+    override var buildDescription: String? = null,
+) : Model<AppInfo>(), FileModel {
     fun wasIOS(): Boolean {
         return isIOSPlatform
     }

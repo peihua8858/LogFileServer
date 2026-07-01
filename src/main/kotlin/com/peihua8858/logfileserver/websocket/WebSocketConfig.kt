@@ -1,13 +1,32 @@
 package com.peihua8858.logfileserver.websocket
 
+import jakarta.servlet.ServletContext
 import jakarta.servlet.http.HttpSession
 import jakarta.websocket.HandshakeResponse
 import jakarta.websocket.server.HandshakeRequest
 import jakarta.websocket.server.ServerEndpointConfig
+import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.web.socket.server.standard.ServerEndpointExporter
 
 @Configuration
-class WebSocketConfig: ServerEndpointConfig.Configurator() {
+class WebSocketConfig : ServerEndpointConfig.Configurator() {
+
+    @Bean
+    fun serverEndpointExporter(servletContext: ServletContext): ServerEndpointExporter {
+        return object : ServerEndpointExporter() {
+            override fun afterPropertiesSet() {
+                // Skip ServerContainer check in test environments
+            }
+
+            override fun afterSingletonsInstantiated() {
+                if (servletContext.getAttribute("jakarta.websocket.server.ServerContainer") != null) {
+                    super.afterSingletonsInstantiated()
+                }
+            }
+        }
+    }
+
     override fun modifyHandshake(sec: ServerEndpointConfig?, request: HandshakeRequest?, response: HandshakeResponse?) {
         super.modifyHandshake(sec, request, response)
 

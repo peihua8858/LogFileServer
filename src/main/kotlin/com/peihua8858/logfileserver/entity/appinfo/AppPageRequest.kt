@@ -14,20 +14,12 @@ class AppPageRequest : PageRequest() {
     /**
      * App编译类型
      */
-    private var buildType: String? = null
+    var buildType: String? = null
 
     /**
      * App版本号
      */
     var versionName: String? = null
-
-    fun getBuildType(): String {
-        return (if (buildType == null) "" else buildType)!!
-    }
-
-    fun setBuildType(buildType: String?) {
-        this.buildType = buildType
-    }
 
     public override fun toString(): String {
         return "AppPageRequest{" +

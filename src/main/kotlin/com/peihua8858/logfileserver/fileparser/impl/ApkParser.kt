@@ -8,6 +8,7 @@ import net.dongliu.apk.parser.ApkFile
 import net.dongliu.apk.parser.bean.AdaptiveIcon
 import net.dongliu.apk.parser.bean.Icon
 import net.dongliu.apk.parser.bean.IconFace
+import org.springframework.stereotype.Component
 import java.io.File
 
 /**
@@ -17,14 +18,14 @@ import java.io.File
  * @version 1.0
  * @date 2020/1/16 15:20
  */
-internal class ApkParser : AbstractParser<AppInfo>() {
+@Component
+ class ApkParser : AbstractFileParser<AppInfo>() {
+    override fun supports(extensionName: String, contentType: String): Boolean {
+        return "apk".equals(extensionName, ignoreCase = true)
+    }
+    override fun order(): Int = 1
     @Throws(PackageParseException::class)
-    override fun onParser(parameter: Parameter): Pair<AppInfo, ByteArray?> {
-        val androidParentPath = PARENT_FILE + File.separator
-        val androidParentFile = File(classPathFile, androidParentPath)
-        if (!androidParentFile.exists()) {
-            androidParentFile.mkdirs()
-        }
+    override fun onParser(parameter: Parameter,dirFile: File): Pair<AppInfo, ByteArray?> {
         val appPath = parameter.file
         val app = AppInfo()
         if (parameter.buildType.isEmpty()) {
@@ -36,7 +37,7 @@ internal class ApkParser : AbstractParser<AppInfo>() {
         if (path.isNullOrEmpty()) {
             throw NullPointerException("参数为空。")
         }
-        app.platform = "Android"
+        app.platform = PLATFORM
         println("PluginRemote--- >$path")
         return ApkFile(File(path)).use { apkParser ->
             val apkMeta = apkParser.apkMeta
@@ -56,38 +57,20 @@ internal class ApkParser : AbstractParser<AppInfo>() {
             app.versionName = apkMeta.versionName
             if (iconPath.isNullOrEmpty()) {
                 iconData = null
-//                saveLauncherIcon(iconData, app)
             }
-            uploadFile(appPath, app)
+            setFileInfo(appPath, app)
             if (app.buildType.isNullOrEmpty()) {
                 app.buildType = "Develop"
             }
             return@use app to iconData
         }
-//        return try {
-//
-//
-//
-//        } catch (e: Exception) {
-//            throw PackageParseException("Unfortunately, an error has occurred while processing parse android app " +
-//                    "file", e)
-//        } finally {
-//            try(apkParser?.close()){
-//
-//            }
-//        }
     }
 
-    override fun createPlatformFile(
-        contentType: String,
-        fileExtension: String,
-        file: File,
-        parentFile: File
-    ): File? {
-       return if ("apk".equals(fileExtension, ignoreCase = true)) {
-            File(parentFile, "android")
-        } else null
-    }
+    override fun platformStrategy(): PlatformStrategy = PlatformStrategy.Default(
+        platformName = PLATFORM,
+        platformDirectory = PARENT_FILE,
+        extension = "apk"
+    )
 
     private inner class ParseIcon(private val iconFaces: List<IconFace>?) {
         var iconPath: String? = null
@@ -128,5 +111,6 @@ internal class ApkParser : AbstractParser<AppInfo>() {
 
     companion object {
         const val PARENT_FILE = "android"
+        const val PLATFORM = "Android"
     }
 }

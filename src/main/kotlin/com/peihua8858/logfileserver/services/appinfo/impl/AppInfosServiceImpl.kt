@@ -8,6 +8,7 @@ import com.peihua8858.logfileserver.entity.appinfo.AppInfo
 import com.peihua8858.logfileserver.entity.appinfo.AppPageRequest
 import com.peihua8858.logfileserver.mappers.appinfo.AppInfoMapper
 import com.peihua8858.logfileserver.services.appinfo.AppInfosService
+import com.peihua8858.logfileserver.utils.escapeLikeWildcards
 import org.springframework.stereotype.Service
 
 /**
@@ -44,7 +45,7 @@ class AppInfosServiceImpl : ServiceImpl<AppInfoMapper, AppInfo>(), AppInfosServi
             wrapper.eq("platform", model.platform)
         }
         wrapper.eq("bundle_id", model.bundleId)
-        val keyword = model.search
+        val keyword = model.search?.let { escapeLikeWildcards(it) }
         if (!keyword.isNullOrEmpty()) {
             wrapper.like("version_name", keyword)
                 .or().like("version_code", keyword)

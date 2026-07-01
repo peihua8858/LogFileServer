@@ -26,6 +26,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
     // Validation：参数校验
     implementation 'org.springframework.boot:spring-boot-starter-validation'
@@ -36,6 +37,8 @@ dependencies {
     implementation 'org.xerial:sqlite-jdbc'
     implementation('com.baomidou:mybatis-plus-spring-boot4-starter:3.5.13')
     implementation('com.baomidou:mybatis-plus:3.5.3.1')
+    // 3.5.13 将 spring 相关类拆分到新模块，显式补充（mybatis-plus:3.5.3.1 不含此模块）
+    implementation('com.baomidou:mybatis-plus-spring:3.5.13')
     implementation 'org.jetbrains.kotlin:kotlin-reflect'
     implementation 'tools.jackson.module:jackson-module-kotlin'
     implementation 'com.google.zxing:core:3.5.3'
@@ -55,6 +58,7 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-websocket-test'
     testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'io.mockk:mockk:1.13.13'
 }
 
 kotlin {

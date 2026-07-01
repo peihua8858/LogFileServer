@@ -1,7 +1,10 @@
 package com.peihua8858.logfileserver.utils
 
-import org.springframework.web.multipart.MultipartFile
+import org.springframework.boot.system.ApplicationHome
 import java.io.File
+import java.net.URISyntaxException
+import java.nio.file.Path
+
 
 class FileUtils
 
@@ -17,14 +20,6 @@ fun File.readRelativePath(fileName: String): String {
 fun File.renameFile(): String {
     val name: String = nameWithoutExtension
     return name + "_" + formatCurTimeSecond
-}
-
-fun MultipartFile.transFileToTemp(contentType: String): File {
-    val sourceFile = FileUtils::class.java.sourceFile?.parentFile
-    val parentFile = File(sourceFile, ".temps")
-    val outputFile = File(parentFile, originalFilename ?: contentType.createFileName())
-    transferTo(outputFile)
-    return outputFile
 }
 
 fun Any.createFileName(
@@ -56,3 +51,24 @@ fun String.createFileName(): String {
     val extensionName = if (startsWith("image/")) ".jpg" else ".temp"
     return "File_$formatCurrentTimeMillis$extensionName"
 }
+
+/**
+ *
+ * 获取jar所在的文件目录
+ * @author dingpeihua
+ * @date 2026/7/1 11:49
+ **/
+val jarDir: Path
+    get() {
+        try {
+            val jarFile = File(
+                FileUtils::class.java.getProtectionDomain()
+                    .codeSource
+                    .location
+                    .toURI()
+            )
+            return jarFile.getParentFile().toPath().toAbsolutePath().normalize()
+        } catch (e: URISyntaxException) {
+            throw RuntimeException("无法获取 jar 所在目录", e)
+        }
+    }

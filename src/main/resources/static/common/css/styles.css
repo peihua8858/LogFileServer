@@ -1,0 +1,97 @@
+
+html body {
+    overflow-y: hidden;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+body .container {
+    box-shadow: -15px 15px 15px rgba(6, 17, 47, 0.7);
+    opacity: 1;
+    -webkit-transition-timing-function: cubic-bezier(0.68, -0.25, 0.265, 0.85);
+    -webkit-transition-property: -webkit-transform, opacity, box-shadow, top, left;
+    transition-property: transform, opacity, box-shadow, top, left;
+    -webkit-transition-duration: .5s;
+    transition-duration: .5s;
+    -webkit-transform-origin: 161px 100%;
+    -ms-transform-origin: 161px 100%;
+    transform-origin: 161px 100%;
+    -webkit-transform: rotateX(0deg);
+    transform: rotateX(0deg);
+    width: 100%;
+    height: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    max-height: 100%;
+    display: table;
+    margin-top: 80px;
+    overflow: hidden;
+    zoom: 1;
+    margin-bottom: 80px;
+    padding: 40px 40px 40px 40px;
+    background-color: rgba(255, 255, 255, 0.8);
+}
+
+/*.table-responsive{*/
+/*    max-height: 600px;*/
+/*    overflow-y: auto;*/
+/*    overflow-x: hidden;*/
+/*}*/
+/*.table_list_wrapper {*/
+/*    max-height: 600px;*/
+/*    width: 100%;*/
+/*overflow-y: auto;*/
+/*display:inline-block;*/
+/*}*/
+tbody {
+    max-height: 500px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
+    display: block;
+}
+
+td {
+    text-align: center;
+    alignment: center;
+    horiz-align: center;
+}
+
+.tableDiv {
+    display: inline-block;
+}
+
+thead, tbody tr {
+    display: table;
+    width: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    table-layout: fixed;
+    word-break: break-word;
+}
+
+.nav-tabs {
+    border-bottom: 0 solid #00000000
+}
+
+.nav-tabs .nav-link.active {
+    color: #495057;
+    background-color: #e9ecef;
+    border-color: #e9ecef;
+}
+
+.table .thead-light th {
+    color: #495057;
+    background-color: #e9ecef;
+    border-color: #e9ecef
+}
+
+/*.nav .nav-tabs >.nav-tabs .nav-link .active > a,*/
+/*.nav .nav-tabs >.nav-tabs .nav-link .active > a:focus,*/
+/*.nav .nav-tabs >.nav-tabs .nav-link .active > a:hover {*/
+/*    color: rgb(255, 255, 255);*/
+/*    background-color: red*/
+/*}*/

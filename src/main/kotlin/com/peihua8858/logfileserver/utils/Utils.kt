@@ -42,12 +42,6 @@ val String?.isNumber: Boolean
 val String?.isIpAddress: Boolean
     get() = this?.matches(IP_ADDRESS_STRING.toRegex()) == true
 
-val Any.sourceFile: File?
-    get() {
-        val h = ApplicationHome(javaClass)
-        return h.source
-    }
-
 val HttpServletRequest.serverUrl: String
     get() {
         val port = serverPort
@@ -68,7 +62,10 @@ fun  isEmptyException(vararg data: CharSequence?): Boolean {
     }
     println(">>>>>:$sb")
     if (sb.isNotEmpty()) {
-        sb.subSequence(0, sb.lastIndexOf("and"))
+        val lastAndIndex = sb.lastIndexOf("and")
+        if (lastAndIndex > 0) {
+            sb.setLength(lastAndIndex)
+        }
         throw NullPointerException("Required String parameter $sb is invalid")
     }
     return false
@@ -83,8 +80,21 @@ fun  isEmptyMessage(vararg data: CharSequence?): String {
     }
     println(">>>>>:$sb")
     if (sb.isNotEmpty()) {
-        sb.subSequence(0, sb.lastIndexOf("and"))
+        val lastAndIndex = sb.lastIndexOf("and")
+        if (lastAndIndex > 0) {
+            sb.setLength(lastAndIndex)
+        }
         return "Required String parameter $sb is invalid"
     }
     return ""
+}
+
+/**
+ * 转义 SQL LIKE 通配符
+ */
+fun escapeLikeWildcards(keyword: String): String {
+    return keyword
+        .replace("\\", "\\\\")
+        .replace("%", "\\%")
+        .replace("_", "\\_")
 }

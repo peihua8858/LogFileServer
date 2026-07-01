@@ -1,14 +1,14 @@
 package com.peihua8858.logfileserver.controller
 
 import com.baomidou.mybatisplus.core.metadata.IPage
-import com.fz.common.utils.toBoolean
 import com.peihua8858.logfileserver.entity.Response
 import com.peihua8858.logfileserver.entity.ResponsePage
 import com.peihua8858.logfileserver.entity.appinfo.AppInfo
 import com.peihua8858.logfileserver.entity.appinfo.AppPageRequest
 import com.peihua8858.logfileserver.services.appinfo.AppInfosService
-import com.peihua8858.logfileserver.services.appinfo.SaveAppFileService
-import com.peihua8858.logfileserver.utils.*
+import com.peihua8858.logfileserver.utils.QrcodeUtil
+import com.peihua8858.logfileserver.utils.generateFreemarker
+import com.peihua8858.logfileserver.utils.serverUrl
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.slf4j.Logger
@@ -17,17 +17,14 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import org.springframework.web.multipart.MultipartFile
-import java.io.IOException
 
 /**
- * App上传下载处理
+ * App 相关信息查询处理
  */
 @Controller
 @RequestMapping("/app")
 class AppController @Autowired constructor(
     private val appInfosService: AppInfosService,
-    private val saveAppFileService: SaveAppFileService
 ) {
     companion object {
         private val LOG: Logger = LoggerFactory.getLogger(AppController::class.java)
@@ -236,10 +233,9 @@ class AppController @Autowired constructor(
             "https://${request.serverName}:8043/app/downloadPlistFile/$id"
         }
     }
-
     /**
      * iOS安装APP之前下载plist文件
-     * 
+     *
      * @param request  HTTP请求
      * @param response HTTP响应
      * @param id       安装包主键ID
@@ -276,83 +272,5 @@ class AppController @Autowired constructor(
                 response.status = 400
             }
         }
-    }
-
-    /**
-     * Jenkins上传APP安装包文件或图标文件
-     * 
-     * @param bundleId    安装包包名，不能为空
-     * @param appName     项目名
-     * @param versionName 版本名称
-     * @param versionCode 版本号
-     * @param buildType   编译类型，如：release
-     * @param platform    系统平台，Android或iOS
-     * @param file        上传的文件
-     * @return
-     * @throws IOException
-     */
-    @PostMapping("/uploadFile")
-    @ResponseBody
-    fun jenkinsUploadFile(
-        request: HttpServletRequest,
-        @RequestParam("bundleId") bundleId: String?,
-        @RequestParam("appName") appName: String?,
-        @RequestParam("versionName") versionName: String?,
-        @RequestParam("versionCode") versionCode: String?,
-        @RequestParam("buildType") buildType: String?,
-        @RequestParam("platform") platform: String?,
-        @RequestParam("file") file: MultipartFile
-    ): Response<String> {
-        if (file.isEmpty) {
-            return Response.failed("Multiple file are invalid.")
-        }
-        if (bundleId.isNullOrEmpty() || appName.isNullOrEmpty()
-            || buildType.isNullOrEmpty() || versionName.isNullOrEmpty()
-            || versionCode.isNullOrEmpty() || platform.isNullOrEmpty()
-        ) {
-            return Response.failed(
-                isEmptyMessage(
-                    bundleId, appName,
-                    buildType, versionName, versionCode, platform
-                )
-            )
-        }
-        if (!versionName.isValidVersion()) {
-            return Response.failed(
-                ("version number \"" + versionName + "\" is invalid.Please see Semantic Versioning "
-                        + "2.0.0: https://semver.org/lang/zh-CN/")
-            )
-        }
-        try {
-            val result = saveAppFileService.saveAppFile(
-                request, bundleId, appName,
-                buildType, versionName, versionCode, platform, file
-            )
-            return Response.ok(result.url)
-        } catch (e: Exception) {
-            return Response.failed(e.message ?: "upload file failed")
-        }
-    }
-
-    /**
-     *
-     * 前端页面直接上传apk 或者ipa文件
-     * @author dingpeihua
-     * @date 2026/6/30 13:52
-     **/
-    @RequestMapping("/upload")
-    @ResponseBody
-    fun uploadFile(
-        request: HttpServletRequest,
-        @RequestParam data: Map<String, String>,
-        @RequestParam("files") files: Array<MultipartFile>
-    ): String {
-        val desc: String = data["desc"] ?: ""
-        val buildType: String = data["buildType"] ?: ""
-        val isOverWrite: Boolean = data["overWrite"].toBoolean()
-        val isOnlyUploadFile: Boolean = data["isOnlyUploadFile"].toBoolean()
-        val result =
-            saveAppFileService.parserAndSaveFiles(request, desc, buildType, isOverWrite, isOnlyUploadFile, files)
-        return result.toJSONString()
     }
 }

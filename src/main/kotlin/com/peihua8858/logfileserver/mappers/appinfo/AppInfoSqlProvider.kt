@@ -1,6 +1,5 @@
 package com.peihua8858.logfileserver.mappers.appinfo
 
-import com.fz.common.utils.toString
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -25,9 +24,9 @@ class AppInfoSqlProvider {
      *     </select>
      */
     fun queryByBundle(params: Map<String, Any>): String {
-        val bundleId = params["bundleId"].toString()
-        val buildType = params["buildType"].toString()
-        val versionName = params["versionName"].toString()
+        val bundleId = params["bundleId"]?.toString().orEmpty()
+        val buildType = params["buildType"]?.toString().orEmpty()
+        val versionName = params["versionName"]?.toString().orEmpty()
         val sql = StringBuilder()
         sql.append("SELECT * FROM app_info ")
         sql.append("WHERE bundle_id = #{bundleId} ")
