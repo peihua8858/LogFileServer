@@ -2,6 +2,7 @@ package com.peihua8858.logfileserver.services.filemeta.impl
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl
 import com.fz.common.file.copyToFile
+import com.fz.common.file.createFile
 import com.fz.common.file.deleteFile
 import com.fz.common.file.writeToFile
 import com.fz.common.text.isNonEmpty
@@ -82,6 +83,7 @@ class SaveFileServiceImpl(
         val contentType = file.contentType
             ?: return ResultData(error = "Content-Type is not support.")
         val tempDir = File(properties.dataDirFile, DataStore.TEMP_DIR)
+        if (!tempDir.exists()) tempDir.mkdirs()
         val tempFile = File(tempDir, file.originalFilename ?: contentType.createFileName())
         file.transferTo(tempFile)
         val parameter = Parameter(tempFile, buildType, desc, isOnlyUploadFile, isOverWrite)
@@ -150,7 +152,7 @@ class SaveFileServiceImpl(
                     if (!outputParent.exists()) outputParent.mkdirs()
                     val savedFile = File(outputParent, parameter.file.name)
                     parameter.file.copyToFile(savedFile)
-                    val filePath = "files" + File.separator + savedFile.readRelativePath(SaveFileService.KEY_UPLOAD)
+                    val filePath = "files" + File.separator + savedFile.readRelativePath(DataStore.FILES_DIR)
                     result.filePath = filePath
                     result.fileName = savedFile.name
                     result.downloadUrl = filePath
@@ -292,6 +294,7 @@ class SaveFileServiceImpl(
             return null
         }
         try {
+            if (!outputParent.exists()) outputParent.mkdirs()
             val iconFile = File(outputParent, "ic_launcher.png")
             if (iconFile.exists()) {
                 iconFile.delete()
@@ -299,7 +302,7 @@ class SaveFileServiceImpl(
             LOG.info("iconFile:" + iconFile.absolutePath)
             LOG.info("iconFile.getParentFile():" + iconFile.absoluteFile)
             iconFile.writeToFile(launcherData)
-            val backIconPath = "files" + File.separator + iconFile.readRelativePath(SaveFileService.KEY_UPLOAD)
+            val backIconPath = "files" + File.separator + iconFile.readRelativePath(DataStore.FILES_DIR)
             LOG.info("saveLauncherIcon>backIconPath:$backIconPath")
             return backIconPath
         } catch (e: java.lang.Exception) {
@@ -339,7 +342,7 @@ class SaveFileServiceImpl(
             File(outputParent, fileName)
         }
         file.copyToFile(appFile) //保存文件
-        val filePath = "files" + File.separator + appFile.readRelativePath(SaveFileService.KEY_UPLOAD)
+        val filePath = "files" + File.separator + appFile.readRelativePath(DataStore.FILES_DIR)
         model.filePath = filePath
         model.fileName = filePath
         model.downloadUrl = filePath

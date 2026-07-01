@@ -1,8 +1,10 @@
 package com.peihua8858.logfileserver
 
 import com.peihua8858.logfileserver.configs.AppProperties
+import com.peihua8858.logfileserver.controller.FileUploadController
 import com.peihua8858.logfileserver.data.DataStore
 import jakarta.annotation.PostConstruct
+import org.slf4j.LoggerFactory
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
@@ -17,9 +19,11 @@ import java.nio.file.Path
     AppProperties::class
 )
 class MainApplication
-
+private val LOG = LoggerFactory.getLogger(MainApplication::class.java)
 fun main(args: Array<String>) {
+    LOG.info("application start")
     runApplication<MainApplication>(*args)
+    LOG.info("application start finished")
 }
 
 @Component

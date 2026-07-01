@@ -3,6 +3,8 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"/>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
     <link rel="icon" th:href="@{/static/common/images/favicon.ico}" type="image/x-icon">
     <title>移动组日志系统</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -85,6 +87,16 @@
     }
 
     $(function () {
+        // Configure CSRF token for all AJAX requests
+        var token = $("meta[name='_csrf']").attr("content");
+        var header = $("meta[name='_csrf_header']").attr("content");
+        if (token && header) {
+            $.ajaxSetup({
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
+                }
+            });
+        }
         formatJson(isFormat);
         $("#formatJson").click(function () {
             isFormat = !isFormat;

@@ -2,6 +2,17 @@
  * 处理控制台日志打印按钮操作
  */
 $(function () {
+    // Configure CSRF token for all AJAX requests
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    if (token && header) {
+        $.ajaxSetup({
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            }
+        });
+    }
+
     // 禁止滚动条
     $(document.body).css({
         "overflow-x": "hidden",

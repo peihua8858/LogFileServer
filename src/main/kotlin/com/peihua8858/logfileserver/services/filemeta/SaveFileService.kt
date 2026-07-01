@@ -5,11 +5,6 @@ import jakarta.servlet.http.HttpServletRequest
 import org.springframework.web.multipart.MultipartFile
 
 interface SaveFileService {
-    companion object {
-        const val KEY_CONFIGS = "configs"
-        const val KEY_UPLOAD = "upload"
-        const val KEY_KEYSTORE = "keystore"
-    }
     fun parserAndSaveFiles(
         request: HttpServletRequest,
         desc: String,

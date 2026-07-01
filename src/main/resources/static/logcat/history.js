@@ -1,5 +1,16 @@
 var tableList;
 $(function () {
+    // Configure CSRF token for all AJAX requests
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    if (token && header) {
+        $.ajaxSetup({
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            }
+        });
+    }
+
     var platform = sessionStorage.getItem("platform");
     console.log("platform>>>" + platform);
     if (!isNull(platform)) {

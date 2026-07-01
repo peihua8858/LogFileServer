@@ -1,6 +1,5 @@
 package com.peihua8858.logfileserver.configs
 
-import com.peihua8858.logfileserver.data.DataStore
 import org.springframework.boot.context.properties.ConfigurationProperties
 import java.io.File
 
@@ -9,8 +8,9 @@ class AppProperties(
     /**
      * 应用数据根目录
      */
-    val dataDir: String ="./${DataStore.DATA_DIR}"
+    dataDir: String = "./data"
 ){
+    val dataDir: String = File(dataDir).absolutePath
     val dataDirFile: File
         get() = File(dataDir)
 }

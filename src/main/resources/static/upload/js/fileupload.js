@@ -14,13 +14,25 @@
 $(function () {
     'use strict';
 
+    // Configure CSRF token for all AJAX requests
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+    if (token && header) {
+        $.ajaxSetup({
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader(header, token);
+            }
+        });
+    }
+
     // Initialize the jQuery File Upload widget:
     $('#fileupload').fileupload({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},
         // url: 'upload/file'
         url: 'files',
-        acceptFileTypes: /(\.|\/)(apk|ipa)$/i
+        acceptFileTypes: /(\.|\/)(apk|ipa)$/i,
+        formData: { _csrf: token }
     });
 
     // Enable iframe cross-domain access via redirect option:
